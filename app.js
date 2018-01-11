@@ -15,6 +15,9 @@ var app = new Vue({
     el: '#root',
 
     data: {
+        resetMessage: '',
+        submitted: false,
+        Customer_id: null,
         Average: null,
         Max2: null,
         Max3: null,
@@ -74,17 +77,52 @@ var app = new Vue({
         km11: null,
         km12: null,
 
+        ym1: null,
+        ym2: null,
+        ym3: null,
+        ym4: null,
+        ym5: null,
+        ym6: null,
+        ym7: null,
+        ym8: null,
+        ym9: null,
+        ym10: null,
+        ym11: null,
+        ym12: null,
+
+        zm1: null,
+        zm2: null,
+        zm3: null,
+        zm4: null,
+        zm5: null,
+        zm6: null,
+        zm7: null,
+        zm8: null,
+        zm9: null,
+        zm10: null,
+        zm11: null,
+        zm12: null,
+
+        RepaytKonstant: 40000,
+
+        CoverG: null,
+        ABal: null,
+        DownPC: null,
+        CScore: null,
+        MinVal: null,
+        TotVal: null,
+        RemP: null,
+        DownP: null,
+        Score: null,
+        Deci: null,
         Newdata: {
             fname: '',
             mname: '',
         },
         showGuaForm: false,
+        computed: false,
 
     },
-    // data: {
-
-
-    // },
 
     mounted: function() {
         console.log('mounted');
@@ -96,6 +134,59 @@ var app = new Vue({
 
     ready: function() {},
     methods: {
+
+
+        checkCust: function() {
+            app.submitted = true;
+            if (app.Customer_id == '' || app.Customer_id == null) {
+                app.submitted = false;
+                app.errorMessage = "Customer ID Field can't be empty";
+                setTimeout(function() {
+                    app.errorMessage = '';
+                }, 1000);
+
+            } else if (app.Score == '' || app.Score == null) {
+                app.submitted = false;
+                app.errorMessage = "Insert Customer Score";
+                setTimeout(function() {
+                    app.errorMessage = '';
+                }, 1000);
+
+            } else {
+
+                axios.post("https://wafcolapi.herokuapp.com/api.php?action=checkId", {
+                        Customer_id: app.Customer_id
+                    })
+                    .then(function(response) {
+                        app.computed = true;
+                        app.submitted = false;
+                        if (response.data.error) {
+                            app.errorMessage = response.data.message;
+                            setTimeout(function() {
+                                app.errorMessage = '';
+                            }, 1000);
+
+                        } else {
+                            app.checKiD = response.data.checklist;
+                            if (app.checKiD.length != 0) {
+                                app.Test1();
+                                app.computed = true;
+                            } else {
+                                app.errorMessage = "Customer ID doesnt exist!";
+                                setTimeout(function() {
+                                    app.errorMessage = '';
+                                }, 1000);
+                            }
+                            // app.ApproveCustomer(app.CustName, app.phoneNo);
+
+                        }
+                    });
+            }
+        },
+
+
+
+
         getMax() {
             console.log(this.m1a);
             var arr = [this.m1a, this.m1b, this.m2a, this.m2b, this.m3a, this.m3b, this.m4a, this.m4b, this.m5a, this.m5b, this.m6a, this.m6b];
@@ -123,7 +214,7 @@ var app = new Vue({
             this.tm12 = this.Average > this.m6b ? 0 : 1;
 
             console.log(this.tm1 + ' ' + this.tm2 + ' ' + this.tm3 + ' ' + this.tm4 + ' ' + this.tm5 + ' ' + this.tm6 + ' ' + this.tm7 + ' ' + this.tm8 + ' ' + this.tm9 + ' ' + this.tm10 + ' ' + this.tm11 + ' ' + this.tm12);
-            this.Test2();
+            app.Test2();
         },
 
 
@@ -149,30 +240,124 @@ var app = new Vue({
 
 
         Test3() {
-            console.log(app.Average);
+
 
             this.km1 = this.sm1 == 0 ? (this.m1a > (app.Average * 12) ? 1 : 0) : 1;
-            this.km2 = this.sm2 == 0 ? (this.m1b > (app.Average * 12) ? 1 : 0) : 1;
-            this.km3 = this.sm3 == 0 ? (this.m2a > (app.Average * 12) ? 1 : 0) : 1;
-            this.km4 = this.sm4 == 0 ? (this.m2b > (app.Average * 12) ? 1 : 0) : 1;
-            this.km5 = this.sm5 == 0 ? (this.m3a > (app.Average * 12) ? 1 : 0) : 1;
-            this.km6 = this.sm6 == 0 ? (this.m3b > (app.Average * 12) ? 1 : 0) : 1;
-            this.km7 = this.sm7 == 0 ? (this.m4a > (app.Average * 12) ? 1 : 0) : 1;
-            this.km8 = this.sm8 == 0 ? (this.m4b > (app.Average * 12) ? 1 : 0) : 1;
-            this.km9 = this.sm9 == 0 ? (this.m5a > (app.Average * 12) ? 1 : 0) : 1;
-            this.km10 = this.sm10 == 0 ? (this.m5b > (app.Average * 12) ? 1 : 0) : 1;
-            this.km11 = this.sm11 == 0 ? (this.m6a > (app.Average * 12) ? 1 : 0) : 1;
-            this.km12 = this.sm12 == 0 ? (this.m6b > (app.Average * 12) ? 1 : 0) : 1;
+            this.km2 = this.sm2 == 0 ? (this.m1b > (app.Average * 11) ? 1 : 0) : 1;
+            this.km3 = this.sm3 == 0 ? (this.m2a > (app.Average * 10) ? 1 : 0) : 1;
+            this.km4 = this.sm4 == 0 ? (this.m2b > (app.Average * 9) ? 1 : 0) : 1;
+            this.km5 = this.sm5 == 0 ? (this.m3a > (app.Average * 8) ? 1 : 0) : 1;
+            this.km6 = this.sm6 == 0 ? (this.m3b > (app.Average * 7) ? 1 : 0) : 1;
+            this.km7 = this.sm7 == 0 ? (this.m4a > (app.Average * 6) ? 1 : 0) : 1;
+            this.km8 = this.sm8 == 0 ? (this.m4b > (app.Average * 5) ? 1 : 0) : 1;
+            this.km9 = this.sm9 == 0 ? (this.m5a > (app.Average * 4) ? 1 : 0) : 1;
+            this.km10 = this.sm10 == 0 ? (this.m5b > (app.Average * 3) ? 1 : 0) : 1;
+            this.km11 = this.sm11 == 0 ? (this.m6a > (app.Average * 2) ? 1 : 0) : 1;
+            this.km12 = this.sm12 == 0 ? (this.m6b > (app.Average) ? 1 : 0) : 1;
 
-            console.log(this.km1 + this.km2 + this.km3 + this.km4 + this.km5 + this.km6 + this.km7 + this.km8 + this.km9 + this.km10 + this.km11 + this.km12);
+            console.log(this.km1 + ' ' + this.km2 + ' ' + this.km3 + ' ' + this.km4 + ' ' + this.km5 + ' ' + this.km6 + ' ' + this.km7 + ' ' + this.km8 + ' ' + this.km9 + ' ' + this.km10 + ' ' + this.km11 + ' ' + this.km12);
+            this.Test3Total = this.km1 + this.km2 + this.km3 + this.km4 + this.km5 + this.km6 + this.km7 + this.km8 + this.km9 + this.km10 + this.km11 + this.km12;
+            console.log(this.Test3Total)
+            this.Test4()
         },
 
+
+        Test4() {
+
+            this.ym1 = (this.m1b - this.m1a) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym2 = (this.m2a - this.m1b) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym3 = (this.m2b - this.m2a) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym4 = (this.m3a - this.m2b) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym5 = (this.m3b - this.m3a) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym6 = (this.m4a - this.m3b) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym7 = (this.m4b - this.m4a) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym8 = (this.m5a - this.m4b) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym9 = (this.m5b - this.m5a) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym10 = (this.m6a - this.m5b) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym11 = (this.m6b - this.m6a) > (app.RepaytKonstant / 12) ? 1 : 0;
+            this.ym12 = (0 - this.m6b) > (app.RepaytKonstant / 12) ? 1 : 0;
+
+            console.log(this.ym1 + ' ' + this.ym2 + ' ' + this.ym3 + ' ' + this.ym4 + ' ' + this.ym5 + ' ' + this.ym6 + ' ' + this.ym7 + ' ' + this.ym8 + ' ' + this.ym9 + ' ' + this.ym10 + ' ' + this.ym11 + ' ' + this.ym12);
+            this.Test5();
+        },
+
+
+        Test5() {
+            this.zm1 = this.ym1 == 0 ? (this.m1a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm2 = this.ym2 == 0 ? (this.m1b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm3 = this.ym3 == 0 ? (this.m2a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm4 = this.ym4 == 0 ? (this.m2b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm5 = this.ym5 == 0 ? (this.m3a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm6 = this.ym6 == 0 ? (this.m3b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm7 = this.ym7 == 0 ? (this.m4a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm8 = this.ym8 == 0 ? (this.m4b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm9 = this.ym9 == 0 ? (this.m5a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm10 = this.ym10 == 0 ? (this.m5b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm11 = this.ym11 == 0 ? (this.m6a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            this.zm12 = this.ym12 == 0 ? (this.m6b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+
+            console.log(this.zm1 + ' ' + this.zm2 + ' ' + this.zm3 + ' ' + this.zm4 + ' ' + this.zm5 + ' ' + this.zm6 + ' ' + this.zm7 + ' ' + this.zm8 + ' ' + this.zm9 + ' ' + this.zm10 + ' ' + this.zm11 + ' ' + this.zm12);
+            this.Test5Total = this.zm1 + this.zm2 + this.zm3 + this.zm4 + this.zm5 + this.zm6 + this.zm7 + this.zm8 + this.zm9 + this.zm10 + this.zm11 + this.zm12;
+            console.log(this.Test5Total)
+            this.RemPaymt()
+            this.DownPaymt()
+            this.Totalval()
+            this.Coverage()
+            this.Minvalue()
+            this.Creditscore()
+            this.Avebalance()
+            this.DownPaymtCheck()
+            this.Decision();
+
+
+        },
+
+        RemPaymt() {
+            app.RemP = app.Average * 12 > app.RepaytKonstant ? app.RepaytKonstant : app.Average * 12
+            console.log(app.RemP)
+        },
+        DownPaymt() {
+            app.DownP = app.RemP * (40 / 60)
+            console.log(app.DownP)
+        },
+
+        Totalval() {
+            app.TotVal = app.RemP + app.DownP;
+            console.log(app.TotVal);
+        },
+
+        Coverage() {
+            app.CoverG = app.Test5Total < 11 ? "No" : "Yes";
+            console.log(app.CoverG)
+        },
+        Minvalue() {
+            app.MinVal = app.TotVal < 30000 ? "No" : "Yes";
+            console.log(app.MinVal)
+        },
+        Creditscore() {
+            app.CScore = app.Score < 500 ? "No" : "Yes";
+            console.log(app.CScore)
+        },
+        Avebalance() {
+            this.ABal = ((this.m1a + this.m1b + this.m2a + this.m2b + this.m3a + this.m3b + this.m4a + this.m4b + this.m5a + this.m5b + this.m6a + this.m6b) / 12) > 20000 ? "Yes" : "No";
+            console.log(app.ABal)
+        },
+        DownPaymtCheck() {
+            app.DownPC = app.m1a < app.DownP ? "No" : "Yes";
+            console.log(app.DownPC)
+        },
+
+        Decision() {
+            app.Deci = app.ABal === app.MinVal == app.CScore === app.CoverG ? "Approved" : "Layback";
+            console.log(app.Deci)
+        },
 
         stripTheGarbage(e) {
             if (e.keyCode < 48 && e.keyCode !== 46 || e.keyCode > 59) {
                 e.preventDefault()
             }
         },
+
         formatNaira(price) {
             console.log(price)
             if (price != '') {
@@ -203,8 +388,6 @@ var app = new Vue({
                 console.log(num);
             }
         },
-
-
 
     }
 });
