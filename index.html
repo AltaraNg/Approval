@@ -36,13 +36,13 @@
                         <a href="#" class="close" v-on:click="resetMessage" data-dismiss="alert" aria-label="close">&times;</a> {{successMessage}}
                     </p>
 
-                    <div class="row">
-                        <div class="col-sm-4 form-group">
+                    <div class="row" style="max-width:600px; margin:0 auto;">
+                        <div class="col-sm-6 form-group">
                             <label>Customer ID</label>
                             <input type="text" placeholder="Enter DVA ID.." v-model="Customer_id" class="form-control">
 
                         </div>
-                        <div class="col-sm-4 form-group">
+                        <div class="col-sm-6 form-group">
                             <label>Score </label>
                             <input type="text" placeholder="Enter Access code Here.." v-model="Score" class="form-control">
 
@@ -112,8 +112,8 @@
 
                         </table>
                     </div>
-                    <div class="row" style=" margin:10px;padding:10px;">
-                        <div class="col-sm-6 form-group">
+                    <div style="margin:0 auto; margin:10px;padding:10px;">
+                        <div class="" style="width: 500px;margin:0 auto;">
                             <table class=" table table-bordered list">
                                 <tr>
                                     <th>Max</th>
@@ -147,7 +147,7 @@
 
                     </div>
 
-                    <div class="row" style=" margin:10px;padding:10px;">
+                    <div v-if="computed" class="row" style=" margin:10px;padding:10px;">
 
                         <table class=" table table-bordered list">
                             <tr>
@@ -179,7 +179,7 @@
                     </div>
                 </div>
                 <button @click="checkCust" style="display:block; margin:0 auto;" class="btn btn-primary btn-small">Compute</button>
-
+                <br>
             </div>
             <!-- :disabled="check_gc == 1" -->
         </div>
