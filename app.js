@@ -15,6 +15,7 @@ var app = new Vue({
     el: '#root',
 
     data: {
+        Test5Total:null,
         resetMessage: '',
         submitted: false,
         Customer_id: null,
@@ -25,7 +26,7 @@ var app = new Vue({
         submitted: false,
         errorMessage: "",
         successMessage: "",
-        m1a: null,
+        m1a: 0,
         m1b: null,
         m2a: null,
         m2b: null,
@@ -258,48 +259,45 @@ var app = new Vue({
             console.log(this.km1 + ' ' + this.km2 + ' ' + this.km3 + ' ' + this.km4 + ' ' + this.km5 + ' ' + this.km6 + ' ' + this.km7 + ' ' + this.km8 + ' ' + this.km9 + ' ' + this.km10 + ' ' + this.km11 + ' ' + this.km12);
             this.Test3Total = this.km1 + this.km2 + this.km3 + this.km4 + this.km5 + this.km6 + this.km7 + this.km8 + this.km9 + this.km10 + this.km11 + this.km12;
             console.log(this.Test3Total)
+            this.RemPaymt();
             this.Test4()
         },
-
-
         Test4() {
-
-            this.ym1 = (this.m1b - this.m1a) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym2 = (this.m2a - this.m1b) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym3 = (this.m2b - this.m2a) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym4 = (this.m3a - this.m2b) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym5 = (this.m3b - this.m3a) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym6 = (this.m4a - this.m3b) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym7 = (this.m4b - this.m4a) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym8 = (this.m5a - this.m4b) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym9 = (this.m5b - this.m5a) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym10 = (this.m6a - this.m5b) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym11 = (this.m6b - this.m6a) > (app.RepaytKonstant / 12) ? 1 : 0;
-            this.ym12 = (0 - this.m6b) > (app.RepaytKonstant / 12) ? 1 : 0;
-
-            console.log(this.ym1 + ' ' + this.ym2 + ' ' + this.ym3 + ' ' + this.ym4 + ' ' + this.ym5 + ' ' + this.ym6 + ' ' + this.ym7 + ' ' + this.ym8 + ' ' + this.ym9 + ' ' + this.ym10 + ' ' + this.ym11 + ' ' + this.ym12);
-            this.Test5();
-        },
-
-
-        Test5() {
-            this.zm1 = this.ym1 == 0 ? (this.m1a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm2 = this.ym2 == 0 ? (this.m1b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm3 = this.ym3 == 0 ? (this.m2a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm4 = this.ym4 == 0 ? (this.m2b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm5 = this.ym5 == 0 ? (this.m3a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm6 = this.ym6 == 0 ? (this.m3b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm7 = this.ym7 == 0 ? (this.m4a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm8 = this.ym8 == 0 ? (this.m4b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm9 = this.ym9 == 0 ? (this.m5a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm10 = this.ym10 == 0 ? (this.m5b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm11 = this.ym11 == 0 ? (this.m6a > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
-            this.zm12 = this.ym12 == 0 ? (this.m6b > ((app.RepaytKonstant / 12) * 6) ? 1 : 0) : 1;
+            
+                        this.ym1 = (this.m1b - this.m1a) > (app.RemP / 12) ? 1 : 0;
+                        this.ym2 = (this.m2a - this.m1b) > (app.RemP / 12) ? 1 : 0;
+                        this.ym3 = (this.m2b - this.m2a) > (app.RemP / 12) ? 1 : 0;
+                        this.ym4 = (this.m3a - this.m2b) > (app.RemP / 12) ? 1 : 0;
+                        this.ym5 = (this.m3b - this.m3a) > (app.RemP / 12) ? 1 : 0;
+                        this.ym6 = (this.m4a - this.m3b) > (app.RemP / 12) ? 1 : 0;
+                        this.ym7 = (this.m4b - this.m4a) > (app.RemP / 12) ? 1 : 0;
+                        this.ym8 = (this.m5a - this.m4b) > (app.RemP / 12) ? 1 : 0;
+                        this.ym9 = (this.m5b - this.m5a) > (app.RemP / 12) ? 1 : 0;
+                        this.ym10 = (this.m6a - this.m5b) > (app.RemP / 12) ? 1 : 0;
+                        this.ym11 = (this.m6b - this.m6a) > (app.RemP / 12) ? 1 : 0;
+                        this.ym12 = (0 - this.m6b) > (app.RemP / 12) ? 1 : 0;
+            
+                        console.log(this.ym1 + ' ' + this.ym2 + ' ' + this.ym3 + ' ' + this.ym4 + ' ' + this.ym5 + ' ' + this.ym6 + ' ' + this.ym7 + ' ' + this.ym8 + ' ' + this.ym9 + ' ' + this.ym10 + ' ' + this.ym11 + ' ' + this.ym12);
+                       
+                        this.Test5();
+                    },   
+                    Test5() {
+                        this.zm1 = this.ym1 == 0 ? (this.m1a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm2 = this.ym2 == 0 ? (this.m1b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm3 = this.ym3 == 0 ? (this.m2a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm4 = this.ym4 == 0 ? (this.m2b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm5 = this.ym5 == 0 ? (this.m3a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm6 = this.ym6 == 0 ? (this.m3b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm7 = this.ym7 == 0 ? (this.m4a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm8 = this.ym8 == 0 ? (this.m4b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm9 = this.ym9 == 0 ? (this.m5a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm10 = this.ym10 == 0 ? (this.m5b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm11 = this.ym11 == 0 ? (this.m6a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+                        this.zm12 = this.ym12 == 0 ? (this.m6b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
 
             console.log(this.zm1 + ' ' + this.zm2 + ' ' + this.zm3 + ' ' + this.zm4 + ' ' + this.zm5 + ' ' + this.zm6 + ' ' + this.zm7 + ' ' + this.zm8 + ' ' + this.zm9 + ' ' + this.zm10 + ' ' + this.zm11 + ' ' + this.zm12);
-            this.Test5Total = this.zm1 + this.zm2 + this.zm3 + this.zm4 + this.zm5 + this.zm6 + this.zm7 + this.zm8 + this.zm9 + this.zm10 + this.zm11 + this.zm12;
-            console.log(this.Test5Total)
-            this.RemPaymt()
+            app.Test5Total = this.zm1 + this.zm2 + this.zm3 + this.zm4 + this.zm5 + this.zm6 + this.zm7 + this.zm8 + this.zm9 + this.zm10 + this.zm11 + this.zm12;
+            console.log(app.Test5Total);  
             this.DownPaymt()
             this.Totalval()
             this.Coverage()
@@ -308,8 +306,6 @@ var app = new Vue({
             this.Avebalance()
             this.DownPaymtCheck()
             this.Decision();
-
-
         },
 
         RemPaymt() {
@@ -328,6 +324,9 @@ var app = new Vue({
 
         Coverage() {
             app.CoverG = app.Test5Total < 11 ? "No" : "Yes";
+            console.log(app.Test5Total)
+            console.log(this.Test5Total)
+            console.log(this.CoverG)
             console.log(app.CoverG)
         },
         Minvalue() {
@@ -348,7 +347,7 @@ var app = new Vue({
         },
 
         Decision() {
-            app.Deci = app.ABal === app.MinVal == app.CScore === app.CoverG ? "Approved" : "Layback";
+            app.Deci = app.ABal === app.MinVal == app.CScore === app.CoverG ? "Approve" : "Layby";
             console.log(app.Deci)
         },
 
