@@ -109,7 +109,7 @@ var app = new Vue({
         CoverG: null,
         ABal: null,
         DownPC: null,
-        CScore: null,
+        // CScore: null,
         MinVal: null,
         TotVal: null,
         RemP: null,
@@ -185,9 +185,6 @@ var app = new Vue({
             }
         },
 
-
-
-
         getMax() {
             console.log(this.m1a);
             var arr = [this.m1a, this.m1b, this.m2a, this.m2b, this.m3a, this.m3b, this.m4a, this.m4b, this.m5a, this.m5b, this.m6a, this.m6b];
@@ -197,6 +194,7 @@ var app = new Vue({
             });
             // return 1;
         },
+
         Test1() {
             this.Average = ((this.m1b - this.m1a > 0 ? this.m1b - this.m1a : 0) + (this.m2a - this.m1b > 0 ? this.m2a - this.m1b : 0) + (this.m2b - this.m2a > 0 ? this.m2b - this.m2a : 0) + (this.m3a - this.m2b > 0 ? this.m3a - this.m2b : 0) + (this.m3b - this.m3a > 0 ? this.m3b - this.m3a : 0) + (this.m4a - this.m3b > 0 ? this.m4a - this.m3b : 0) + (this.m4b - this.m4a > 0 ? this.m4b - this.m4a : 0) + (this.m5a - this.m4b > 0 ? this.m5a - this.m4b : 0) +
                 (this.m5b - this.m5a > 0 ? this.m5b - this.m5a : 0) + (this.m6a - this.m5b > 0 ? this.m6a - this.m5b : 0) + (this.m6b - this.m6a > 0 ? this.m6b - this.m6a : 0)) / 11
@@ -242,7 +240,6 @@ var app = new Vue({
 
         Test3() {
 
-
             this.km1 = this.sm1 == 0 ? (this.m1a > (app.Average * 12) ? 1 : 0) : 1;
             this.km2 = this.sm2 == 0 ? (this.m1b > (app.Average * 11) ? 1 : 0) : 1;
             this.km3 = this.sm3 == 0 ? (this.m2a > (app.Average * 10) ? 1 : 0) : 1;
@@ -262,6 +259,7 @@ var app = new Vue({
             this.RemPaymt();
             this.Test4()
         },
+
         Test4() {
             
                         this.ym1 = (this.m1b - this.m1a) > (app.RemP / 12) ? 1 : 0;
@@ -312,6 +310,7 @@ var app = new Vue({
             app.RemP = app.Average * 12 > app.RepaytKonstant ? app.RepaytKonstant : app.Average * 12
             console.log(app.RemP)
         },
+
         DownPaymt() {
             app.DownP = app.RemP * (40 / 60)
             console.log(app.DownP)
@@ -329,25 +328,29 @@ var app = new Vue({
             console.log(this.CoverG)
             console.log(app.CoverG)
         },
+
         Minvalue() {
             app.MinVal = app.TotVal < 30000 ? "No" : "Yes";
             console.log(app.MinVal)
         },
-        Creditscore() {
-            app.CScore = app.Score < 500 ? "No" : "Yes";
-            console.log(app.CScore)
-        },
+
+        // Creditscore() {
+        //     app.CScore = app.Score < 500 ? "No" : "Yes";
+        //     console.log(app.CScore)
+        // },
+
         Avebalance() {
             this.ABal = ((this.m1a + this.m1b + this.m2a + this.m2b + this.m3a + this.m3b + this.m4a + this.m4b + this.m5a + this.m5b + this.m6a + this.m6b) / 12) > 20000 ? "Yes" : "No";
             console.log(app.ABal)
         },
+
         DownPaymtCheck() {
             app.DownPC = app.m1a < app.DownP ? "No" : "Yes";
             console.log(app.DownPC)
         },
 
         Decision() {
-            app.Deci = app.ABal === app.MinVal == app.CScore === app.CoverG ? "Approve" : "Layby";
+            app.Deci = app.ABal === app.MinVal === app.CoverG ? "Approve" : "Layby";
             console.log(app.Deci)
         },
 

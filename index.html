@@ -36,17 +36,17 @@
                         <a href="#" class="close" v-on:click="resetMessage" data-dismiss="alert" aria-label="close">&times;</a> {{successMessage}}
                     </p>
 
-                    <div class="row" style="max-width:600px; margin:0 auto;">
-                        <div class="col-sm-6 form-group">
+                    <div class="row" style="max-width:300px; margin:0 auto;">
+                        <div class="col-sm-12 form-group">
                             <label>Customer ID</label>
                             <input type="text" placeholder="Enter Customer ID Here.." v-model="Customer_id" class="form-control">
 
                         </div>
-                        <div class="col-sm-6 form-group">
+                        <!-- <div class="col-sm-6 form-group">
                             <label>Score </label>
                             <input type="text" placeholder="Enter Credit Score Here.." v-model="Score" class="form-control">
 
-                        </div>
+                        </div> -->
 
                     </div>
                     <div class="loading" v-if='submitted'>Loading&#8230;</div>
