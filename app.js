@@ -293,7 +293,7 @@ var app = new Vue({
             this.Totalval()
             this.Coverage()
             this.Minvalue()
-            this.Creditscore()
+            // this.Creditscore()
             this.Avebalance()
             this.DownPaymtCheck()
             this.Decision();
