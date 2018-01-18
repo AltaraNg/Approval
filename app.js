@@ -146,16 +146,9 @@ var app = new Vue({
                     app.errorMessage = '';
                 }, 1000);
 
-            } else if (app.Score == '' || app.Score == null) {
-                app.submitted = false;
-                app.errorMessage = "Insert Customer Score";
-                setTimeout(function() {
-                    app.errorMessage = '';
-                }, 1000);
+            }  else {
 
-            } else {
-
-                axios.post("https://wafcolapi.herokuapp.com/api.php?action=checkId", {
+                axios.post("https://altara-api.herokuapp.com/api.php?action=checkId", {
                         Customer_id: app.Customer_id
                     })
                     .then(function(response) {
