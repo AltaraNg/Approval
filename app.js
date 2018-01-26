@@ -15,7 +15,13 @@ var app = new Vue({
     el: '#root',
 
     data: {
-        Test5Total:null,
+        phoneNo: '',
+        CustName: '',
+        Employee_id: '',
+        Access_code: '',
+        access_granted: false,
+        dataloaded: false,
+        Test5Total: null,
         resetMessage: '',
         submitted: false,
         Customer_id: null,
@@ -26,7 +32,7 @@ var app = new Vue({
         submitted: false,
         errorMessage: "",
         successMessage: "",
-        m1a: 0,
+        m1a: null,
         m1b: null,
         m2a: null,
         m2b: null,
@@ -125,7 +131,7 @@ var app = new Vue({
 
     },
 
-    mounted: function() {
+    mounted: function () {
         console.log('mounted');
     },
 
@@ -133,45 +139,174 @@ var app = new Vue({
 
     },
 
-    ready: function() {},
+    ready: function () { },
     methods: {
-
-
-        checkCust: function() {
+        GainAccess: function () {
             app.submitted = true;
-            if (app.Customer_id == '' || app.Customer_id == null) {
-                app.submitted = false;
-                app.errorMessage = "Customer ID Field can't be empty";
-                setTimeout(function() {
+            var emp = app.Employee_id;
+            
+            if (!isNaN(emp.charAt(4))){
+                emp.slice(4);
+                emp.slice(0,-3)
+            }
+            else if ((!isNaN(emp.charAt(5))))  {
+                emp.slice(5);
+                emp.slice(0,-3)
+            }
+            else {
+                
+            }
+            console.log(emp);
+            var dat = {
+                Employee_id: emp,
+                Access_code: app.Access_code
+            }
+            var formData = app.toFormData(dat);
+            console.log()
+            axios.post("https://altara-api.herokuapp.com/api.php?action=aknowledge", formData)
+                .then(function (response) {
+                    app.submitted = false;
+                    console.log(response);
+                    if (response.data.error) {
+                        app.errorMessage = response.data.message;
+
+                        setTimeout(function () {
+                            app.errorMessage = '';
+                        }, 2000);
+
+                    } else {
+                        if (response.data.data.length != 0) {
+
+                            if (response.data.data[0].Employee_Role_id == 10 || response.data.data[0].Employee_Role_id == 5 || response.data.data[0].Employee_Role_id == 1) {
+                                app.access_granted = true;
+                                app.successMessage = "Access Granted!, Enter Customer ID below";
+
+                                setTimeout(function () {
+                                    app.successMessage = '';
+                                }, 2000);
+                            } else {
+                                app.errorMessage = "Access Denied, Wrong Login Details";
+
+                                setTimeout(function () {
+                                    app.errorMessage = '';
+                                }, 2000);
+                            }
+                        }
+
+                        else {
+
+                            app.errorMessage = "Access Denied, Wrong Login Details";
+
+                            setTimeout(function () {
+                                app.errorMessage = '';
+                            }, 2000);
+                        }
+
+                    }
+                });
+        },
+
+
+        ApproveCustomer: function (name, telnumber) {
+            var approveData = {
+                customer_id: app.Customer_id,
+                m1a: app.m1a,
+                m1b: app.m1b,
+                m2a: app.m2a,
+                m2b: app.m2b,
+                m3a: app.m3a,
+                m3b: app.m3b,
+                m4a: app.m4a,
+                m4b: app.m4b,
+                m5a: app.m5a,
+                m5b: app.m5b,
+                m6a: app.m6a,
+                m6b: app.m6b,
+                Deci: app.Deci
+            }
+            var formData = app.toFormData(approveData);
+            console.log(app.Customer_id)
+            if (app.checKiD.length == 1) {
+
+                axios.post("http://localhost/altaracredit/altara_api/api.php?action=approve",formData)
+                    .then(function (response) {
+                        console.log(response);
+
+                        if (response.data.error) {
+                            app.submitted = false;
+                            app.errorMessage = response.data.message;
+
+                            setTimeout(function () {
+                                app.errorMessage = '';
+                            }, 1000);
+
+                        } else {
+                            
+                            app.successMessage = response.data.message;
+                            app.computed = true;
+                            app.submitted = false;
+                            setTimeout(function () {
+                                app.successMessage = '';
+                            }, 1000);
+
+                            if (app.Deci == 'Approve') {
+                                // app.sendNotification(name, telnumber)
+                            }
+
+                        }
+                    });
+            } else {
+                app.errorMessage = "Customer ID Doesnt Exist";
+                setTimeout(function () {
                     app.errorMessage = '';
                 }, 1000);
 
-            }  else {
+            }
+        },
 
+        toFormData: function (obj) {
+            var form_data = new FormData();
+            for (var key in obj) {
+                form_data.append(key, obj[key]);
+            }
+            return form_data;
+        },
+
+
+        checkCust: function () {
+            if (app.Customer_id == '' || app.Customer_id == null) {
+                app.errorMessage = "Customer ID Field can't be empty";
+                setTimeout(function () {
+                    app.errorMessage = '';
+                }, 1000);
+            }
+            else {
+                app.submitted = true;
                 axios.post("https://altara-api.herokuapp.com/api.php?action=checkId", {
-                        Customer_id: app.Customer_id
-                    })
-                    .then(function(response) {
-                        app.computed = true;
+                    Customer_id: app.Customer_id
+                })
+                    .then(function (response) {
                         app.submitted = false;
                         if (response.data.error) {
                             app.errorMessage = response.data.message;
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 app.errorMessage = '';
                             }, 1000);
 
                         } else {
                             app.checKiD = response.data.checklist;
                             if (app.checKiD.length != 0) {
+                                app.CustName = response.data.checklist[0].first_name
+                                app.phoneNo = response.data.checklist[0].telephone
                                 app.Test1();
-                                app.computed = true;
+                                console.log(app.phoneNo);
+                                app.ApproveCustomer(app.CustName, app.phoneNo);
                             } else {
                                 app.errorMessage = "Customer ID doesnt exist!";
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     app.errorMessage = '';
                                 }, 1000);
                             }
-                            // app.ApproveCustomer(app.CustName, app.phoneNo);
 
                         }
                     });
@@ -181,7 +316,7 @@ var app = new Vue({
         getMax() {
             console.log(this.m1a);
             var arr = [this.m1a, this.m1b, this.m2a, this.m2b, this.m3a, this.m3b, this.m4a, this.m4b, this.m5a, this.m5b, this.m6a, this.m6b];
-            var max = arr.reduce(function(a, b) {
+            var max = arr.reduce(function (a, b) {
                 app.Max = Math.max(a, b);
                 console.log(app.Max);
             });
@@ -254,41 +389,41 @@ var app = new Vue({
         },
 
         Test4() {
-            
-                        this.ym1 = (this.m1b - this.m1a) > (app.RemP / 12) ? 1 : 0;
-                        this.ym2 = (this.m2a - this.m1b) > (app.RemP / 12) ? 1 : 0;
-                        this.ym3 = (this.m2b - this.m2a) > (app.RemP / 12) ? 1 : 0;
-                        this.ym4 = (this.m3a - this.m2b) > (app.RemP / 12) ? 1 : 0;
-                        this.ym5 = (this.m3b - this.m3a) > (app.RemP / 12) ? 1 : 0;
-                        this.ym6 = (this.m4a - this.m3b) > (app.RemP / 12) ? 1 : 0;
-                        this.ym7 = (this.m4b - this.m4a) > (app.RemP / 12) ? 1 : 0;
-                        this.ym8 = (this.m5a - this.m4b) > (app.RemP / 12) ? 1 : 0;
-                        this.ym9 = (this.m5b - this.m5a) > (app.RemP / 12) ? 1 : 0;
-                        this.ym10 = (this.m6a - this.m5b) > (app.RemP / 12) ? 1 : 0;
-                        this.ym11 = (this.m6b - this.m6a) > (app.RemP / 12) ? 1 : 0;
-                        this.ym12 = (0 - this.m6b) > (app.RemP / 12) ? 1 : 0;
-            
-                        console.log(this.ym1 + ' ' + this.ym2 + ' ' + this.ym3 + ' ' + this.ym4 + ' ' + this.ym5 + ' ' + this.ym6 + ' ' + this.ym7 + ' ' + this.ym8 + ' ' + this.ym9 + ' ' + this.ym10 + ' ' + this.ym11 + ' ' + this.ym12);
-                       
-                        this.Test5();
-                    },   
-                    Test5() {
-                        this.zm1 = this.ym1 == 0 ? (this.m1a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm2 = this.ym2 == 0 ? (this.m1b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm3 = this.ym3 == 0 ? (this.m2a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm4 = this.ym4 == 0 ? (this.m2b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm5 = this.ym5 == 0 ? (this.m3a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm6 = this.ym6 == 0 ? (this.m3b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm7 = this.ym7 == 0 ? (this.m4a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm8 = this.ym8 == 0 ? (this.m4b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm9 = this.ym9 == 0 ? (this.m5a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm10 = this.ym10 == 0 ? (this.m5b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm11 = this.ym11 == 0 ? (this.m6a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
-                        this.zm12 = this.ym12 == 0 ? (this.m6b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+
+            this.ym1 = (this.m1b - this.m1a) > (app.RemP / 12) ? 1 : 0;
+            this.ym2 = (this.m2a - this.m1b) > (app.RemP / 12) ? 1 : 0;
+            this.ym3 = (this.m2b - this.m2a) > (app.RemP / 12) ? 1 : 0;
+            this.ym4 = (this.m3a - this.m2b) > (app.RemP / 12) ? 1 : 0;
+            this.ym5 = (this.m3b - this.m3a) > (app.RemP / 12) ? 1 : 0;
+            this.ym6 = (this.m4a - this.m3b) > (app.RemP / 12) ? 1 : 0;
+            this.ym7 = (this.m4b - this.m4a) > (app.RemP / 12) ? 1 : 0;
+            this.ym8 = (this.m5a - this.m4b) > (app.RemP / 12) ? 1 : 0;
+            this.ym9 = (this.m5b - this.m5a) > (app.RemP / 12) ? 1 : 0;
+            this.ym10 = (this.m6a - this.m5b) > (app.RemP / 12) ? 1 : 0;
+            this.ym11 = (this.m6b - this.m6a) > (app.RemP / 12) ? 1 : 0;
+            this.ym12 = (0 - this.m6b) > (app.RemP / 12) ? 1 : 0;
+
+            console.log(this.ym1 + ' ' + this.ym2 + ' ' + this.ym3 + ' ' + this.ym4 + ' ' + this.ym5 + ' ' + this.ym6 + ' ' + this.ym7 + ' ' + this.ym8 + ' ' + this.ym9 + ' ' + this.ym10 + ' ' + this.ym11 + ' ' + this.ym12);
+
+            this.Test5();
+        },
+        Test5() {
+            this.zm1 = this.ym1 == 0 ? (this.m1a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm2 = this.ym2 == 0 ? (this.m1b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm3 = this.ym3 == 0 ? (this.m2a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm4 = this.ym4 == 0 ? (this.m2b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm5 = this.ym5 == 0 ? (this.m3a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm6 = this.ym6 == 0 ? (this.m3b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm7 = this.ym7 == 0 ? (this.m4a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm8 = this.ym8 == 0 ? (this.m4b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm9 = this.ym9 == 0 ? (this.m5a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm10 = this.ym10 == 0 ? (this.m5b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm11 = this.ym11 == 0 ? (this.m6a > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
+            this.zm12 = this.ym12 == 0 ? (this.m6b > ((app.RemP / 12) * 6) ? 1 : 0) : 1;
 
             console.log(this.zm1 + ' ' + this.zm2 + ' ' + this.zm3 + ' ' + this.zm4 + ' ' + this.zm5 + ' ' + this.zm6 + ' ' + this.zm7 + ' ' + this.zm8 + ' ' + this.zm9 + ' ' + this.zm10 + ' ' + this.zm11 + ' ' + this.zm12);
             app.Test5Total = this.zm1 + this.zm2 + this.zm3 + this.zm4 + this.zm5 + this.zm6 + this.zm7 + this.zm8 + this.zm9 + this.zm10 + this.zm11 + this.zm12;
-            console.log(app.Test5Total);  
+            console.log(app.Test5Total);
             this.DownPaymt()
             this.Totalval()
             this.Coverage()
@@ -360,7 +495,7 @@ var app = new Vue({
 
                 num = Number(num);
 
-                var countDecimals = function(value) {
+                var countDecimals = function (value) {
                     if (Math.floor(value) === value) return 0;
                     return value.toString().split(".")[1].length || 0;
                 }

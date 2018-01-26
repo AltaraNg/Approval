@@ -36,6 +36,27 @@
                         <a href="#" class="close" v-on:click="resetMessage" data-dismiss="alert" aria-label="close">&times;</a> {{successMessage}}
                     </p>
 
+
+
+                    <div v-if="!access_granted">
+                        <div class="row " style="padding:40px;">
+                            <div class="col-sm-6 form-group">
+                                <label>Store Agent ID</label>
+                                <input type="text" placeholder="Enter DVA ID.." v-model="Employee_id" class="form-control">
+
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label>Access Code</label>
+                                <input type="text" placeholder="Enter Access code Here.." v-model="Access_code" class="form-control">
+
+                            </div>
+
+                        </div>
+
+                        <button type="button" @click="GainAccess()" class="btn btn-success btn-small" style="display:block; font-size:12px;margin:0 auto;">Login</button>
+                        <br>
+                    </div>
+<div v-if="access_granted">
                     <div class="row" style="max-width:300px; margin:0 auto;">
                         <div class="col-sm-12 form-group">
                             <label>Customer ID</label>
@@ -124,7 +145,7 @@
                     <div v-if="computed" style="width: 100px;margin:10px auto;">
                          <label class="btn btn-primary btn-small">{{Deci}}</label>
                     </div>
-
+                </div>
                     <!-- <div style="margin:0 auto; margin:10px;padding:10px;">
                         <div class="" style="width: 500px;margin:0 auto;">
                             <table class=" table table-bordered list">
