@@ -228,7 +228,7 @@ var app = new Vue({
             console.log(app.Customer_id)
             if (app.checKiD.length == 1) {
 
-                axios.post("http://localhost/altaracredit/altara_api/api.php?action=approve",formData)
+                axios.post("https://altara-api.herokuapp.com/api.php?action=approve",formData)
                     .then(function (response) {
                         console.log(response);
 
